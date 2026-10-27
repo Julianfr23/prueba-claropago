@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.6</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.pagoclaro</groupId>
+    <artifactId>conciliacion-pagos</artifactId>
+    <version>1.0.0</version>
+    <name>conciliacion-pagos</name>
+    <description>Herramienta de soporte N3 para conciliar pagos de forma segura e idempotente</description>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- Base en memoria en modo Oracle: ejecucion local y pruebas sin instalar Oracle -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!-- Los scripts de db/ son la unica fuente de verdad: se exponen en el classpath
+                 para que la aplicacion y las pruebas usen exactamente los mismos archivos.
+                 El PL/SQL y los scripts solo-Oracle no se incluyen (H2 no los ejecuta). -->
+            <resource>
+                <directory>db</directory>
+                <targetPath>db</targetPath>
+                <includes>
+                    <include>schema/01_*.sql</include>
+                    <include>schema/02_*.sql</include>
+                    <include>queries/*.sql</include>
+                    <include>seed/*.sql</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- mvn -Poracle ... : agrega el driver JDBC de Oracle (no necesario para H2/pruebas) -->
+        <profile>
+            <id>oracle</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.oracle.database.jdbc</groupId>
+                    <artifactId>ojdbc11</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+</project>

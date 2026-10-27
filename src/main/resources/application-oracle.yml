@@ -1,0 +1,13 @@
+# Perfil para Oracle real. Sin credenciales en el repositorio: se leen del entorno.
+# Uso: ORACLE_URL=jdbc:oracle:thin:@//host:1521/SERVICIO ORACLE_USER=... ORACLE_PASSWORD=... \
+#      mvn -Poracle spring-boot:run -Dspring-boot.run.profiles=oracle
+# El esquema NO se crea desde la aplicacion: ya existe en Oracle. Los scripts de db/schema/02 y 03
+# se aplican manualmente (ver README).
+spring:
+  datasource:
+    url: ${ORACLE_URL}
+    username: ${ORACLE_USER}
+    password: ${ORACLE_PASSWORD}
+  sql:
+    init:
+      mode: never

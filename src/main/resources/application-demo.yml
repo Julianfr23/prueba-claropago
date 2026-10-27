@@ -1,0 +1,6 @@
+# Perfil de demostracion: carga los 4 pagos de muestra del enunciado.
+# Uso: mvn spring-boot:run -Dspring-boot.run.profiles=demo
+spring:
+  sql:
+    init:
+      data-locations: classpath:db/seed/demo_sample_data.sql
